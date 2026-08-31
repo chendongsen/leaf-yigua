@@ -1,0 +1,11 @@
+node_modules/
+
+# Local browser profiles and test artifacts
+edge-*/
+*.png
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

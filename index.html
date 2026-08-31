@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f1e8" />
+    <title>叶卦 · 六叶成卦</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">六叶成卦</p>
+          <h1>叶卦</h1>
+        </div>
+        <div class="topbar-actions">
+          <span class="build-tag">新版 · 可记录</span>
+          <button class="icon-button" id="randomizeButton" type="button" title="随机翻叶">
+            <span aria-hidden="true">↻</span><span>随机</span>
+          </button>
+          <button class="icon-button" id="resetButton" type="button" title="全部复位">
+            <span aria-hidden="true">↺</span><span>复位</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="workspace">
+        <div class="board-panel">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">操作区</p>
+              <h2>翻动六片叶子</h2>
+            </div>
+            <div class="board-heading-actions">
+              <span class="order-note">第 1 爻在下 · 第 6 爻在上</span>
+              <button class="camera-launch" id="openCameraButton" type="button">摄像头识别</button>
+            </div>
+          </div>
+
+          <div class="question-field">
+            <label for="questionInput">本次所问 <span>可选</span></label>
+            <textarea id="questionInput" rows="2" maxlength="120" placeholder="例如：这段合作接下来如何推进？"></textarea>
+            <div class="question-meta">
+              <span id="questionCount">0 / 120</span>
+              <div class="question-actions">
+                <button class="text-button confirm-question" id="confirmQuestionButton" type="button">确定问题</button>
+                <button class="text-button" id="saveHistoryButton" type="button" title="保存当前卦象到本地历史">保存本次卦象</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="leaf-stack" id="leafStack" aria-label="六片叶子，从下往上排列"></div>
+
+          <div class="legend-row">
+            <span><i class="legend-dot front"></i>正面</span>
+            <span><i class="legend-dot back"></i>反面</span>
+            <span class="legend-hint">点击叶片即可翻面</span>
+          </div>
+
+          <div class="method-strip" aria-label="起卦流程">
+            <div><b>01</b><span>先确认正反面对应的阴阳</span></div>
+            <div><b>02</b><span>按第 1 爻到第 6 爻记录</span></div>
+            <div><b>03</b><span>保存问题与结果，便于复盘</span></div>
+          </div>
+          <p class="scope-note"><strong>识别边界：</strong>摄像头结果是基于现场正反样本的视觉候选，光线、背景和叶片状态会影响准确度；确认六片叶子的正反后再起卦，不作为医疗、法律或投资结论。</p>
+        </div>
+
+        <aside class="result-panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="section-kicker">卦象结果</p>
+              <h2 id="hexagramName">等待起卦</h2>
+            </div>
+            <span class="hexagram-number" id="hexagramNumber">--</span>
+          </div>
+
+          <div class="hexagram-hero">
+            <div class="hexagram-symbol" id="hexagramSymbol" aria-label="卦象符号">䷀</div>
+            <div class="hexagram-meta">
+              <p id="hexagramPinyin">翻动叶片后生成卦象</p>
+              <p class="muted" id="binaryValue">000000</p>
+              <time class="muted" id="castTime" datetime=""></time>
+            </div>
+          </div>
+
+          <div class="trigram-grid">
+            <div class="trigram-card">
+              <span>上卦</span>
+              <strong id="upperTrigram">--</strong>
+              <small id="upperElement">--</small>
+            </div>
+            <div class="trigram-card">
+              <span>下卦</span>
+              <strong id="lowerTrigram">--</strong>
+              <small id="lowerElement">--</small>
+            </div>
+          </div>
+
+          <div class="line-summary" id="lineSummary"></div>
+
+          <div class="settings-block">
+            <div class="settings-label">
+              <span>阴阳映射</span>
+              <span class="muted">按你的叶片习惯设置</span>
+            </div>
+            <div class="segmented" role="group" aria-label="选择正面对应的阴阳">
+              <button type="button" class="segment active" data-front-yang="true">正面为阳</button>
+              <button type="button" class="segment" data-front-yang="false">反面为阳</button>
+            </div>
+          </div>
+
+          <button class="copy-button" id="copyButton" type="button" disabled>
+            <span aria-hidden="true">□</span>复制卦象结果
+          </button>
+          <div class="export-row" aria-label="导出起卦记录">
+            <button class="export-button" id="exportJsonButton" type="button" title="导出 JSON 数据">JSON</button>
+            <button class="export-button" id="exportMarkdownButton" type="button" title="导出 Markdown 文档">Markdown</button>
+            <button class="export-button" id="exportImageButton" type="button" title="导出卦象图片">图片</button>
+          </div>
+          <p class="disclaimer">卦象用于传统文化记录与自我观察，不替代专业判断。</p>
+
+          <div class="history-block">
+            <div class="history-heading">
+              <div>
+                <p class="section-kicker">本地记录</p>
+                <h3>最近起卦</h3>
+              </div>
+              <button class="text-button" id="clearHistoryButton" type="button" title="清空本地历史">清空</button>
+            </div>
+            <div id="historyList" class="history-list" aria-live="polite"></div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="reading-panel" aria-labelledby="readingTitle">
+        <div class="reading-top-grid">
+          <div class="reading-intro">
+            <div>
+              <p class="section-kicker">卦象解读</p>
+              <h2 id="readingTitle">乾为天 · 行健进取</h2>
+            </div>
+            <p id="readingSummary" class="reading-summary"></p>
+          </div>
+
+          <div class="answer-block answer-block-compact" aria-live="polite">
+            <div class="answer-heading">
+              <div>
+                <p class="section-kicker">问题回应</p>
+                <h3 id="answerHeadline">填写问题后生成针对性回答</h3>
+              </div>
+              <span class="answer-category" id="answerCategory">综合问题</span>
+            </div>
+            <p class="answer-conclusion" id="answerConclusion"></p>
+            <div class="answer-details">
+              <div><span>卦象依据</span><p id="answerBasis"></p></div>
+              <div><span>建议下一步</span><p id="answerAction"></p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="aspect-grid">
+          <article class="aspect-card">
+            <span class="aspect-icon" aria-hidden="true">心</span>
+            <p class="aspect-label">感情</p>
+            <p id="loveReading"></p>
+          </article>
+          <article class="aspect-card">
+            <span class="aspect-icon" aria-hidden="true">业</span>
+            <p class="aspect-label">事业</p>
+            <p id="careerReading"></p>
+          </article>
+          <article class="aspect-card">
+            <span class="aspect-icon" aria-hidden="true">身</span>
+            <p class="aspect-label">健康提醒</p>
+            <p id="healthReading"></p>
+          </article>
+          <article class="aspect-card attention-card">
+            <span class="aspect-icon" aria-hidden="true">慎</span>
+            <p class="aspect-label">注意事项</p>
+            <p id="attentionReading"></p>
+          </article>
+        </div>
+
+        <div class="action-grid">
+          <div class="action-column do-column">
+            <p class="action-title"><span aria-hidden="true">✓</span>宜做</p>
+            <ul id="doList"></ul>
+          </div>
+          <div class="action-column avoid-column">
+            <p class="action-title"><span aria-hidden="true">×</span>不宜</p>
+            <ul id="avoidList"></ul>
+          </div>
+        </div>
+
+        <div class="evidence-block">
+          <div class="evidence-heading">
+            <div>
+              <p class="section-kicker">解读依据</p>
+              <h3>古典文本与推导路径</h3>
+            </div>
+            <a href="https://ctext.org/book-of-changes/zhs" target="_blank" rel="noreferrer">查看《周易》原文 ↗</a>
+          </div>
+          <div class="evidence-quotes">
+            <blockquote id="guaciQuote"></blockquote>
+            <blockquote id="tuanQuote"></blockquote>
+            <blockquote id="xiangQuote"></blockquote>
+          </div>
+          <p id="derivationText" class="derivation"></p>
+          <div class="evidence-layers" aria-label="解读层次">
+            <span><b>原文层</b>《卦辞》《彖传》《象传》公开古籍文本</span>
+            <span><b>推导层</b>上下卦象义与卦名组合</span>
+            <span><b>应用层</b>现代白话建议，仅供自我观察</span>
+          </div>
+          <details class="source-details">
+            <summary>查看来源与版权说明</summary>
+            <p>古籍引文数据整理自 Wikisource 的简体《周易》公开文本，并提供中国哲学书电子化计划链接供交叉核验；本页面不内嵌第三方现代译文。感情、事业、健康和行动建议由本项目根据卦辞、彖传、象传与上下卦象义重新归纳，属于软件原创说明。</p>
+            <p>如需发布或商用，请保留古籍来源链接，并为后续新增的译文、图片或字体单独核对授权。</p>
+          </details>
+          <p class="source-note">原文依据：《周易·卦辞》《彖传》《象传》，采用可核验的公开古籍文本。上方各领域建议为本软件结合三层依据作出的现代白话归纳，并非古籍原句或确定性预言。</p>
+        </div>
+      </section>
+    </main>
+    <dialog class="camera-dialog" id="cameraDialog" data-camera-stage="front" aria-labelledby="cameraDialogTitle">
+      <div class="camera-shell">
+        <header class="camera-header">
+          <div>
+            <p class="section-kicker">实物起卦</p>
+            <h2 id="cameraDialogTitle">摄像头识别六片叶子</h2>
+          </div>
+          <button class="camera-close" id="closeCameraButton" type="button" aria-label="关闭摄像头">×</button>
+        </header>
+        <div class="camera-steps" aria-label="识别步骤">
+          <button type="button" data-camera-step="front">1 正面样本</button>
+          <button type="button" data-camera-step="back" disabled>2 反面样本</button>
+          <button type="button" data-camera-step="six" disabled>3 六叶识别</button>
+        </div>
+        <div class="camera-view">
+          <video id="cameraVideo" autoplay playsinline muted></video>
+          <div class="camera-sample-guide" aria-hidden="true"><span></span></div>
+          <div class="camera-six-guide" aria-hidden="true">
+            <span>4</span><span>5</span><span>6</span><span>1</span><span>2</span><span>3</span>
+          </div>
+        </div>
+        <canvas id="cameraCanvas" hidden></canvas>
+        <p class="camera-status" id="cameraStatus" role="status" aria-live="polite"></p>
+        <div class="camera-capture-actions">
+          <button class="camera-primary" id="cameraCaptureButton" type="button">采集正面样本</button>
+          <button class="camera-secondary" id="cameraImportButton" type="button">拍照导入</button>
+          <input id="cameraFileInput" type="file" accept="image/*" capture="environment" hidden />
+        </div>
+        <div class="camera-result-list" id="cameraResultList" aria-label="六片叶子识别结果"></div>
+        <footer class="camera-footer">
+          <button class="camera-secondary" id="resetCalibrationButton" type="button">重新校准</button>
+          <button class="camera-primary" id="applyRecognitionButton" type="button" disabled>确认并生成卦象</button>
+        </footer>
+      </div>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
