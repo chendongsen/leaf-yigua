@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">叶卦应用图标</title>
+  <desc id="desc">深绿色方形底上的浅色叶片与六爻线条</desc>
+  <rect width="1024" height="1024" fill="#163f36"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M190 705h250M190 765h250M190 825h250" stroke="#f5f1e8" stroke-width="24"/>
+    <path d="M510 705h125M675 705h125M510 765h290M510 825h125M675 825h125" stroke="#b9d7bd" stroke-width="24"/>
+    <path d="M640 165C475 202 343 356 344 548c1 129 67 226 174 279 111-94 182-220 192-378 8-120-17-218-70-284Z" fill="#d9e9d9" stroke="#a8c8ac" stroke-width="20"/>
+    <path d="M661 201c-44 124-89 251-129 381-16 51-25 116-20 194" stroke="#83a888" stroke-width="18"/>
+    <path d="M532 554c-58-3-112 11-165 42M563 461c-47-17-91-18-137-7M505 652c-47 16-85 40-120 73" stroke="#9fbea4" stroke-width="14"/>
+  </g>
+</svg>

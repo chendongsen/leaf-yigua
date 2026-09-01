@@ -3,6 +3,7 @@ node_modules/
 # Local browser profiles and test artifacts
 edge-*/
 *.png
+!assets/*.png
 
 # OS and editor files
 .DS_Store
