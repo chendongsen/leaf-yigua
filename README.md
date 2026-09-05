@@ -48,6 +48,10 @@
 - 无法授权摄像头时，可以通过“拍照导入”完成同样的三步流程。
 - JSON 历史记录会保存识别方法、每爻置信度、覆盖率、是否检测到叶片以及是否人工修正。
 
+## 安装到 Android
+
+线上版本通过 GitHub Pages 发布到 `https://chendongsen.github.io/leaf-yigua/`。首次联网打开后，Service Worker 会缓存应用代码、图标和古籍数据；随后可在 Android Chrome 菜单中选择“安装应用”或“添加到主屏幕”。摄像头仅能在 HTTPS 或本机开发地址下使用，并仍需用户授权。
+
 ## 应用图标
 
 `assets/icon.svg` 是无文字矢量源文件，`assets/icon-192.png` 和 `assets/icon-512.png` 用于网页图标、iOS 主屏和 Android PWA 安装图标。

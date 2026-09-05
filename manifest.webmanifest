@@ -1,8 +1,11 @@
 {
   "name": "叶卦 · 六叶成卦",
   "short_name": "叶卦",
+  "description": "用六片树叶的正反面生成对应卦象，并查看可追溯的经典依据。",
   "lang": "zh-CN",
+  "id": "./",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f5f1e8",
   "theme_color": "#163f36",

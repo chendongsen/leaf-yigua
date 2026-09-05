@@ -423,3 +423,11 @@ renderLeaves();
 renderResult();
 updateQuestionCount();
 renderHistory();
+
+if ("serviceWorker" in navigator && window.isSecureContext) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(() => {
+      // 离线缓存失败不影响在线起卦。
+    });
+  });
+}
